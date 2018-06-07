@@ -45,11 +45,12 @@ void SortedDoublyLinkedList<T>::displayTop(int size) {
     Link *ptr = head;
     int i = 0;
     while (i < size) {
-        cout << ptr->data1 << ",";
+        cout << FBLACK_GREEN << i << "). " << ptr->data1 << ", ";
         ptr = ptr->next;
         i++;
     }
-    cout << endl;
+
+    cout << RST << endl;
 }
 
 // ============================================================================

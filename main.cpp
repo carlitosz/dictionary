@@ -8,14 +8,24 @@
 #include <regex>
 using namespace std;
 
+
+// ============================================================================
+// User defined classes.
+// ============================================================================
 #include "Colors.h"
 #include "bst.h"
 #include "SortedDoublyLinkedList.h"
 
-// Constants
-const int TO_LOAD_1000 = 1000 * 3;
+// ============================================================================
+// Global constants
+// ============================================================================
+const int TO_LOAD_1000 = 1000 * 1;
 const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
+
+// ============================================================================
+// Function prototypes.
+// ============================================================================
 bool validateUserInput(BST t, string input);
 SortedDoublyLinkedList<string> getDictionary(string letter);
 SortedDoublyLinkedList<string> parseResult(string);
@@ -24,6 +34,10 @@ string getWord(string);
 string getDefinition(string);
 bool validateChoice(char);
 
+
+// ============================================================================
+// Main.
+// ============================================================================
 int main(void) {
     cout << "Hello and welcome to the dictionary app!" << endl;
     cout << "In this app, you can view words and their definitions." << endl;
@@ -40,7 +54,7 @@ int main(void) {
     cout << FGREY_PURPLE << "Please make sure you have an internet connection"
          << " during the download process. It should be quick!" << RST << endl;
 
-    cout << FBLACK_RED << "To conserve memory allocation, the program will only load"
+    cout << FBLACK_RED << "To conserve memory, the program will only load"
          << " the first " << TO_LOAD_1000 << " words." << RST << endl;
 
 
@@ -54,7 +68,7 @@ int main(void) {
         tree.insert(s);
     }
 
-    string userInput = "";
+    string userInput = " ";
     while (validateUserInput(tree, userInput) == false) {
         cout << "Please enter the letter of the words you would like to lookup (i.e. A, B, C): ";
         cin >> userInput;
@@ -69,8 +83,8 @@ int main(void) {
         cout << "The dictionary is ready to view!" << endl;
     }
 
-    char choice = ' ';
-    while (validateChoice(choice) == false) {
+    string choice = " ";
+    while (validateChoice(choice.at(0)) == false) {
         cout << "Please choose from the following menu: " << endl << endl;
         cout << "v)iew top N words in the list." << endl;
         cout << "s)earch for a word" << endl;
@@ -79,7 +93,7 @@ int main(void) {
         cout << "Please enter a choice: ";
         cin >> choice;
 
-        switch (choice) {
+        switch (choice.at(0)) {
             case 'v': {
                 int count;
                 cout << "Enter how many words you want to view: ";
@@ -104,21 +118,30 @@ int main(void) {
                 }
 
                 string def = list.inList(word);
-                cout << def << endl;
+                cout << FBLACK_GREEN << def << RST << endl;
             }
+
+            cin.get();
             break;
             case 'q':
                 exit(1);
+            default:
+                std::cin.clear();
+                break;
         }
     }
 
     return 0;
 }
 
+// ============================================================================
+// Validates the user input.
+// ============================================================================
 bool validateChoice(char choice) {
-    if (choice == ' ') return false;
+    if (choice == ' ' || choice == '\n' || isalnum(choice) == false) return false;
     if (choice != 'v' || choice != 's' || choice != 'q') {
-        cout << "Invalid option, please try again..." << endl;
+        cout << FBLACK_RED << "Invalid option, please try again..."
+             << RST << endl << endl << endl;
         return false;
     }
 
@@ -242,7 +265,7 @@ string getDefinition(string line) {
 
     def = line.substr(i, line.length() - 1);
     def.erase(std::remove(def.begin(), def.end(), '"'), def.end());
-    def.erase(std::remove(def.begin(), def.end(), '('), def.end());
+    def.erase(std::remove(def.begin(), def.end(), ')'), def.end());
 
     return def;
 }
@@ -252,6 +275,9 @@ string getDefinition(string line) {
 // ============================================================================
 bool validateUserInput(BST t, string input) {
     transform(input.begin(), input.end(), input.begin(), ::tolower);
-    if (t.find(input)) return true;
+    if (t.find(input) && input.at(0) == 'a') return true;
+
+    cout << "Sorry, at this point we only have definitions for the letter A"
+         << ", please try again." << endl;
     return false;
 }

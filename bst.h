@@ -6,6 +6,7 @@
 using namespace std;
 
 #include "node.h"
+#include "Colors.h"
 
 // ============================================================================
 // The BST class is a self-balancing binary search tree.
